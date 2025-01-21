@@ -1,0 +1,17 @@
+### Регистрация пользователя
+POST http://localhost:3001/auth/register
+Content-Type: application/json
+
+{
+  "email": "user4@example.com",
+  "password": "Password123*"
+}
+
+### Вход в систему
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "Password123*"
+}

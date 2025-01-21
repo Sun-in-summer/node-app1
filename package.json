@@ -17,11 +17,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.12.0",
     "nodemailer": "^6.9.16",
     "puppeteer": "^24.1.0",
-    "rucaptcha-api": "^0.0.3"
+    "rucaptcha-api": "^0.0.3",
+    "wait-for-it": "^1.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
