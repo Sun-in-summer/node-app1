@@ -3,7 +3,7 @@ POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
-  "email": "user4@example.com",
+  "email": "user6@example.com",
   "password": "Password123*"
 }
 
@@ -15,3 +15,8 @@ Content-Type: application/json
   "email": "user@example.com",
   "password": "Password123*"
 }
+
+###  Получить изображение капчи
+GET http://localhost:3001/captcha
+
+

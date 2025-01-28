@@ -5,12 +5,19 @@ import { validateEmail, validatePassword } from '../utils/auth-utils.js';
 import { StatusCodes } from 'http-status-codes';
 import { connectToDatabase } from '../config/init-database.js';
 import { db } from '../config/init-database.js';
+import { checkCaptcha } from '../middleware/captcha.middleware.js';
 
 const SALT_ROUNDS = 10;
 const SECRET_KEY = 'secret_key';
 
 export const registerUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, captcha } = req.body;
+  console.log(email, password, captcha);
+  if (!checkCaptcha(captcha)) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: 'Invalid CAPTCHA' });
+  }
   if (!validateEmail(email) || !validatePassword(password)) {
     return res
       .status(StatusCodes.BAD_REQUEST)
@@ -48,6 +55,11 @@ export const registerUser = async (req, res) => {
         [email, hashedPassword],
         (err, results) => {
           if (err) {
+            if (err.code === 'ER_DUP_ENTRY') {
+              return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ message: 'User already exists' });
+            }
             reject(err);
           } else {
             resolve();
@@ -69,7 +81,12 @@ export const registerUser = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, captcha } = req.body;
+  if (!checkCaptcha(captcha)) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: 'Invalid CAPTCHA' });
+  }
   try {
     await connectToDatabase();
     const [results] = await new Promise((resolve, reject) => {
@@ -91,9 +108,7 @@ export const login = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: 'User not found' });
     }
-    console.log('results', results);
     const user = results;
-    console.log(user);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
