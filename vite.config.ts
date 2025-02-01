@@ -9,9 +9,9 @@ export default defineConfig({
     outDir: 'dist',
   },
   server: {
-    port: 3001,
+    port: 3000,
     proxy: {
-      "/api": "http://localhost:5000", // Проксирование запросов к бэкенду
+      "/api": "http://localhost:3001"// Проксирование запросов к бэкенду
     },
   },
 })

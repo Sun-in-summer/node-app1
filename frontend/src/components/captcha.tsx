@@ -3,26 +3,36 @@ import axios from "axios";
 import { ErrorMessage } from 'formik';
 
 const Captcha: React.FC = () => {
-    const [captchaValue, setCaptchaValue] = useState<string>("");
-   
+    const [captchaData, setCaptchaData] = useState<string>("");
+
 
     useEffect(() => {
-        const generateCaptcha = async () => {
+        const fetchCaptcha = async () => {
             try {
-                const response = await axios.get("/api/captcha/generate");
-                setCaptchaValue(response.data.value);
+                const response = await axios.get("/api/captcha");
+                if (!response.data || !response.data.data) {
+                    console.error("Неверный формат ответа сервера");
+                    return;
+                }
+                setCaptchaData(response.data.data); // Получаем Base64-строку
             } catch (error) {
                 console.error("Ошибка при получении капчи:", error);
             }
         };
 
-        generateCaptcha();
+        fetchCaptcha();
     }, []);
+
+    
 
     return (
         <div>
             <p>Введите текст с картинки:</p>
-            <img src={`/api/captcha/image?value=${encodeURIComponent(captchaValue)}`} alt="Captcha" />
+            {captchaData ? (
+                <img src={captchaData} alt="Captcha" />
+            ) : (
+                <div>Загрузка...</div>
+            )}
             <input type="text" name="captcha" />
             <ErrorMessage name="captcha" component="div" className="error" />
         </div>

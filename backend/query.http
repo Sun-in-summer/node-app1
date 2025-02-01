@@ -1,5 +1,5 @@
 ### Регистрация пользователя
-POST http://localhost:3001/auth/register
+POST http://localhost:3001/api/auth/register
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Вход в систему
-POST http://localhost:3001/auth/login
+POST http://localhost:3001/api/auth/login
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
   "password": "Password123*"
 }
 
-###  Получить изображение капчи
-GET http://localhost:3001/captcha
 
+###  Получить изображение капчи
+GET http://localhost:3001/api/captcha
 

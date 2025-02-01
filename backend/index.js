@@ -22,8 +22,8 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.use('/auth', authRouter);
-app.use('/captcha', captchaRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/captcha', captchaRouter);
 
 app.use(express.static('frontend/public'));
 
