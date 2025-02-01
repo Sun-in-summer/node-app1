@@ -15,12 +15,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ isRegister, onSubmit }) => {
             email: "",
             password: "",
             confirmPassword: "",
-            captcha: "",
+            captcha: "", // Текст, введенный пользователем
+            captchaImage: "", // Base64-изображение капчи
         }
         : {
             email: "",
             password: "",
-            captcha: "",
+            captcha: "", // Текст, введенный пользователем
+            captchaImage: "", // Base64-изображение капчи
         };
 
     const validationSchema = Yup.object({
