@@ -7,11 +7,12 @@ import { RegisterResponse } from '../types/response-types';
 
 const RegisterPage: React.FC = () => {
     const handleRegister = async (values: UserRegisterData) => {
+        console.log("REGISTER");
         try {
             await axios.post<RegisterResponse>("/api/auth/register", values);
             alert("Регистрация успешна!");
         } catch (error) {
-            if (axios.isAxiosError(error)) { 
+            if (axios.isAxiosError(error)) {
                 const message = error.response?.data?.message || "Произошла ошибка при регистрации";
                 alert(`Ошибка регистрации: ${message}`);
             } else {
