@@ -12,16 +12,19 @@ const SECRET_KEY = 'secret_key';
 
 export const registerUser = async (req, res) => {
   const { email, password, captcha } = req.body;
-  console.log(email, password, captcha);
-  if (!checkCaptcha(captcha)) {
+  const emailIsValid = validateEmail(email);
+  const passwordValidationResult = validatePassword(password);
+  if (!checkCaptcha(captcha, req.session)) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .send({ message: 'Invalid CAPTCHA' });
   }
-  if (!validateEmail(email) || !validatePassword(password)) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'Invalid email or password' });
+  if (!emailIsValid || !passwordValidationResult) {
+    const errorMessage = !emailIsValid
+      ? 'Invalid email'
+      : passwordValidationResult.message;
+
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage });
   }
 
   try {
@@ -82,7 +85,7 @@ export const registerUser = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password, captcha } = req.body;
-  if (!checkCaptcha(captcha)) {
+  if (!checkCaptcha(captcha, req.session)) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .send({ message: 'Invalid CAPTCHA' });

@@ -13,15 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <button type="submit">${isLogin ? 'Login' : 'Register'}</button>
       </form>
       <p class="error" id="error-message"></p>
+      ${
+        isLogin
+          ? '<button id="toggle-register">Don\'t have an account? Register</button>'
+          : '<button id="toggle-login">Already have an account? Login</button>'
+      }
     `;
-
-    if (!isLogin) {
-      formContainer.innerHTML +=
-        '<button id="toggle-login">Already have an account? Login</button>';
-    } else {
-      formContainer.innerHTML +=
-        '<button id="toggle-register">Don\'t have an account? Register</button>';
-    }
   }
 
   function validateEmail(email) {
@@ -54,9 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('password', password);
     formData.append('captcha', captcha);
 
-    console.log(formData.get('email'));
-    console.log(formData.get('password'));
-
     try {
       const response = await fetch(
         `/auth/${event.target.id === 'login-form' ? 'login' : 'register'}`,
@@ -66,19 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       );
 
-      console.log(
-        `/auth/${event.target.id === 'login-form' ? 'login' : 'register'}`
-      );
-
       const data = await response.json();
 
-      if (data.message) {
-        if (response.status === 200) {
-          alert(data.message);
-        } else {
-          showError(data.message);
-          reloadCaptcha();
-        }
+      if (response.ok) {
+        alert(data.message || 'Success!');
+      } else {
+        showError(data.message || 'An error occurred');
+        reloadCaptcha();
       }
     } catch (error) {
       console.error('Error:', error);
@@ -87,7 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showError(message) {
-    document.getElementById('error-message').textContent = message;
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.textContent = message;
   }
 
   function reloadCaptcha() {
@@ -103,14 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.addEventListener('submit', (event) => {
+  document.addEventListener('submit', async (event) => {
     if (
       event.target.id === 'login-form' ||
       event.target.id === 'register-form'
     ) {
-      handleSubmit(event);
+      await handleSubmit(event);
     }
   });
 
+  // Инициализация формы регистрации по умолчанию
   renderForm(false);
 });
