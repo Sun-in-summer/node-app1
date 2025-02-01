@@ -44,7 +44,8 @@ export const registerUser = async (req, res) => {
       );
     });
 
-    if (results && results.length > 0) {
+    if (results) {
+      console.log(results);
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: 'User already exists' });
